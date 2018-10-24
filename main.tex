@@ -1,5 +1,5 @@
 \documentclass[conference]{IEEEtran}
-\IEEEoverridecommandlockouts
+% \IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -31,35 +31,42 @@ Authors proposed an STDP-based Spiking DCNN with a spike time coding where each 
 \end{abstract}
 
 \begin{IEEEkeywords}
-component, formatting, style, styling, insert
+Spiking Neural Network, STDP, Deep Learning, Temporal Coding, Convolution Neural Network, Object Recognition
 \end{IEEEkeywords}
 
 \section{Introduction}
-This document is a model and instructions for \LaTeX.
-Please observe the conference page limits. 
 
-\section{Ease of Use}
+\section{Changes proposed to the original paper}
+\subsection{Exponential STDP}
+The original work \cite{DBLP:journals/corr/KheradpishehGTM16} have used a time length independent STDP learning rule. They justify their update rule with the argument that the time frame for processing is small, hence no need to update the weights differentially. But we wanted to challenge this assumption and use a time dependent STDP learning rule, because it represents better the actual biological process. 
+The exact formulation of the exponential STDP update rule is as follows,
+$$ \Delta w_{ij} = 
+\begin{cases}
+    a^{+} w_{ij} (1 - w_{ij}) e ^ { \frac{-(t_i - t_j)}{\tau^{+} } } & \text{if } t_j - t_i \leq 0, \\
+    a^{-} w_{ij} (1 - w_{ij}) e ^ { \frac{-(t_i - t_j)}{\tau^{-} } } & \text{if } t_j - t_i > 0 \\
+\end{cases} $$
+\subsection{Removing lateral inhibition}
+The IEEEtran class file is used to format your paper and style the text. All margins,
+\subsection{Using coloured images }
+The IEEEtran class file is used to format your paper and style the text. All margins,
 
-\subsection{Maintaining the Integrity of the Specifications}
+\section{Experimental Setup}
 
-The IEEEtran class file is used to format your paper and style the text. All margins, 
-column widths, line spaces, and text fonts are prescribed; please do not 
-alter them. You may note peculiarities. For example, the head margin
-measures proportionately more than is customary. This measurement 
-and others are deliberate, using specifications that anticipate your paper 
-as one part of the entire proceedings, and not as an independent document. 
-Please do not revise any of the current designations.
+\subsection{Architecture \& Dataset}
+Going with the original work, we used the same architecture, three convolutional layers each followed by a pooling layer. For the first layer, only ON center DoG filters of size $7 \times 7$ and standard deviations of 1 and 2 pixels are used. The first, second and third convolutional layers consists of 4, 20, and 20 neuronal maps with conv-window sizes $5 \times 5$, $ 17 \times 17 $ and $ 5 \times 5 $, respectively. The pooling window sizes of the first and second pooling layers are $ 7 \times 7 $ and $ 5 \times 5 $ with strides 6 and 5 respectively. The third pooling layer performs a global max pooling operation. \\
+As with the original paper, we evaluated on the same dataset i.e., face and motorbike categories of Caltech 101 dataset available at \url{http://www.vision.caltech.edu}. The training set contains 200 randomly selected images per category, and remaining images constitute the test set. 
+\subsection{Evaluation Metrics}
+We compare the classification accuracy on the test set images which the network has never seen before. In all the experiments, we have used linear SVM classifiers with penalty parameter $C = 1.0$ (optimized by a grid search in the range of $(0, 10]).
 
-\section{Prepare Your Paper Before Styling}
+\subsection{Code}
+We have used the implementation made public by the authors at \url{https://github.com/npvoid/SDNN\_python} and made the proposed changes to the code. 
+
+\section{Results}
+
+\section{Plan for Phase-II}
+
+\section{Remove this section}
 Before you begin to format your paper, first write and save the content as a 
-separate text file. Complete all content and organisational editing before 
-formatting. Please note sections \ref{AA}--\ref{SCM} below for more information on 
-proofreading, spelling and grammar.
-
-Keep your text and graphic files separate until after the text has been 
-formatted and styled. Do not number text heads---{\LaTeX} will do that 
-for you.
-
 \subsection{Abbreviations and Acronyms}\label{AA}
 Define abbreviations and acronyms the first time they are used in the text, 
 even after they have been defined in the abstract. Abbreviations such as 
